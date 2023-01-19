@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require('body-parser');
 const app = express();
 
 const cors = require('cors');
@@ -9,6 +10,7 @@ const PORT = process.env.PORT || 3500;
 // cors option to be set
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(logger);
 
 

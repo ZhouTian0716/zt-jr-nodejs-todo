@@ -46,7 +46,8 @@ const createOne = async (req, res) => {
 // allow query for getAll
 const getAll = (req, res) => {
   if (req.query) {
-    const queryResult = data.tasks;
+    // 笔记：queryResult这里我一开始用const了
+    let queryResult = data.tasks;
     // Step 1, 对queryResult进行筛选
     if (req.query.description) {
       const keyword = req.query.description;
@@ -59,18 +60,18 @@ const getAll = (req, res) => {
     }
     // Step 2, 对queryResult进行排序
     switch (req.query.order) {
-      case "descend":
+      case "new":
         const descending = queryResult.sort((a, b) => {
-          if (a.id > b.id) return 1;
-          if (a.id < b.id) return -1;
+          if (a.id < b.id) return 1;
+          if (a.id > b.id) return -1;
           return 0;
         });
         queryResult = [...descending];
         break;
-      case "ascend":
+      case "old":
         const ascending = queryResult.sort((a, b) => {
-          if (a.id < b.id) return 1;
-          if (a.id > b.id) return -1;
+          if (a.id > b.id) return 1;
+          if (a.id < b.id) return -1;
           return 0;
         });
         queryResult = [...ascending];
@@ -95,8 +96,9 @@ const getById = (req, res) => {
 };
 
 const updateById = async (req, res) => {
-  const task = data.tasks.find((e) => e.id === req.params.id);
-  const taskIndex = data.tasks.findIndex((e) => e.id === req.params.id);
+  
+  const task = data.tasks.find((e) => e.id == req.params.id);
+  const taskIndex = data.tasks.findIndex((e) => e.id == req.params.id);
   if (!task) {
     return res
       .status(400)
@@ -105,8 +107,9 @@ const updateById = async (req, res) => {
 
   const updatedTask = {
     ...task,
-    description: req.body.description,
-    done: req.body.done,
+    done: req.body.done || task.done ,
+    description: req.body.description || task.description,
+    
   };
   // 替换目标task
   data.tasks[taskIndex] = updatedTask;
