@@ -86,7 +86,7 @@ const getAll = (req, res) => {
 };
 
 const getById = (req, res) => {
-  const task = data.tasks.find((e) => e.id == req.params.id);
+  const task = data.tasks.find((e) => e.id === parseInt(req.params.id));
   if (!task) {
     return res
       .status(400)
@@ -96,9 +96,8 @@ const getById = (req, res) => {
 };
 
 const updateById = async (req, res) => {
-  
-  const task = data.tasks.find((e) => e.id == req.params.id);
-  const taskIndex = data.tasks.findIndex((e) => e.id == req.params.id);
+  const task = data.tasks.find((e) => e.id === parseInt(req.params.id));
+  const taskIndex = data.tasks.findIndex((e) => e.id === parseInt(req.params.id));
   if (!task) {
     return res
       .status(400)
@@ -106,10 +105,9 @@ const updateById = async (req, res) => {
   }
 
   const updatedTask = {
-    ...task,
-    done: req.body.done || task.done ,
-    description: req.body.description || task.description,
-    
+    id:task.id,
+    done: req.body.done,
+    description: req.body.description,
   };
   // 替换目标task
   data.tasks[taskIndex] = updatedTask;
@@ -121,7 +119,7 @@ const updateById = async (req, res) => {
       JSON.stringify(data.tasks)
     );
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
   res.status(200).json(updatedTask);
 };
@@ -133,7 +131,9 @@ const deleteById = async (req, res) => {
       .status(400)
       .json({ message: `Task ID ${req.body.id} not found` });
   }
-  const filteredArray = data.tasks.filter((e) => e.id !== parseInt(req.params.id));
+  const filteredArray = data.tasks.filter(
+    (e) => e.id !== parseInt(req.params.id)
+  );
   // 更新本地data
   try {
     await fsPromises.writeFile(
