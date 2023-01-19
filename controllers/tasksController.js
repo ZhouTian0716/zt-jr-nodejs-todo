@@ -127,13 +127,13 @@ const updateById = async (req, res) => {
 };
 
 const deleteById = async (req, res) => {
-  const task = data.tasks.find((e) => e.id === req.params.id);
+  const task = data.tasks.find((e) => e.id === parseInt(req.params.id));
   if (!task) {
     return res
       .status(400)
-      .json({ message: `Task ID ${req.params.id} not found` });
+      .json({ message: `Task ID ${req.body.id} not found` });
   }
-  const filteredArray = data.tasks.filter((e) => e.id !== req.params.id);
+  const filteredArray = data.tasks.filter((e) => e.id !== parseInt(req.params.id));
   // 更新本地data
   try {
     await fsPromises.writeFile(

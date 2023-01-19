@@ -8,12 +8,8 @@ const {
   deleteById,
 } = require("../controllers/tasksController");
 
-router.post("/", createOne);
-router.get("/", getAll);
+router.post("/", createOne).get("/", getAll);
 
-router
-  .get("/:id", getById)
-  .patch("/:id", updateById)
-  .delete("/:id", deleteById);
+router.get("/:id", getById).put("/:id", updateById).delete("/:id", deleteById);
 
 module.exports = router;
