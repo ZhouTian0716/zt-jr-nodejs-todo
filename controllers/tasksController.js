@@ -48,7 +48,7 @@ const getAll = (req, res) => {
   if (req.query) {
     // 笔记：queryResult这里我一开始用const了
     let queryResult = data.tasks;
-    // Step 1, 对queryResult进行筛选
+    // Step 1, 对description进行筛选
     if (req.query.description) {
       const keyword = req.query.description;
       // GOOD EXAMPLE OF indexOf method!
@@ -58,7 +58,19 @@ const getAll = (req, res) => {
       );
       queryResult = [...filtedTasks];
     }
-    // Step 2, 对queryResult进行排序
+    // Step 2, 对done进行筛选
+    if (req.query.done) {
+      if (req.query.done === "true") {
+        const doneTasks = queryResult.filter((e) => e.done);
+        queryResult = [...doneTasks];
+      }
+      if (req.query.done === "false") {
+        const doneTasks = queryResult.filter((e) => !e.done);
+        queryResult = [...doneTasks];
+      }
+    }
+
+    // Step 3, 对queryResult进行排序
     switch (req.query.order) {
       case "new":
         const descending = queryResult.sort((a, b) => {
@@ -97,15 +109,18 @@ const getById = (req, res) => {
 
 const updateById = async (req, res) => {
   const task = data.tasks.find((e) => e.id === parseInt(req.params.id));
-  const taskIndex = data.tasks.findIndex((e) => e.id === parseInt(req.params.id));
+  const taskIndex = data.tasks.findIndex(
+    (e) => e.id === parseInt(req.params.id)
+  );
   if (!task) {
     return res
       .status(400)
       .json({ message: `Task ID ${req.params.id} not found` });
   }
 
+  // 还没检查前端输入req.body.done和req.body.description
   const updatedTask = {
-    id:task.id,
+    id: task.id,
     done: req.body.done,
     description: req.body.description,
   };

@@ -17,15 +17,12 @@ const cors = (req, res, next) => {
 
 app.use(cors);
 
-
-
 // MIDDLE WARES
 // cors option to be set
 // app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(logger);
-
 
 app.use("/tasks", require("./routes/tasksRoutes"));
 
