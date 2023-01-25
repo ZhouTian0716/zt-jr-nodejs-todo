@@ -108,6 +108,12 @@ const getById = (req, res) => {
 };
 
 const updateById = async (req, res) => {
+  // 检查前端输入req.body.done和req.body.description
+  if (!req.body.description || !req.body.done) {
+    return res
+      .status(400)
+      .json({ message: "Task field required." });
+  }
   const task = data.tasks.find((e) => e.id === parseInt(req.params.id));
   const taskIndex = data.tasks.findIndex(
     (e) => e.id === parseInt(req.params.id)
@@ -118,7 +124,7 @@ const updateById = async (req, res) => {
       .json({ message: `Task ID ${req.params.id} not found` });
   }
 
-  // 还没检查前端输入req.body.done和req.body.description
+  
   const updatedTask = {
     id: task.id,
     done: req.body.done,
