@@ -109,7 +109,7 @@ const getById = (req, res) => {
 
 const updateById = async (req, res) => {
   // 检查前端输入req.body.done和req.body.description
-  if (!req.body.description || !req.body.done) {
+  if (!req.body.description && !req.body.done) {
     return res
       .status(400)
       .json({ message: "Task field required." });
